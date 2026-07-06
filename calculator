@@ -1,1 +1,24 @@
+def cal(a,b,op):
+  #转换成浮点数格式
+    try:
+        a = float(a)
+        b = float(b)
+    except VlaueError:
+        return "请输入数据"
+    if op == "+":
+        return a + b
+    elif op == "-":
+        return a - b
+    elif op == "*":
+    #相乘结果为整形则输出整形
+        result = round(a * b, 10)
+        return int(result) if isinstance(result,int) and result == int(result) else return result
+    elif op == "/":
+        if b == 0:
+            print("除数不得为0")
+        else return a / b
+print(cacul(1,2,"+"))
+print(cacul(1.5,4,"*"))
+print(cacul(8,2,"/"))
+print(cacul(8,0,"/"))
 

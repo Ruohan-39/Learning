@@ -1,0 +1,30 @@
+import os
+import shutil
+
+#获取文件夹路径
+src = r""
+
+#分类映射，对应所有后缀
+TARGETS = {
+    "图片": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".ico"],
+    "视频": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv"],
+    "音频": [".mp3", ".wav", ".flac", ".aac", ".wma", ".ogg"],
+    "压缩包": [".zip", ".rar", ".7z", ".tar", ".gz", ".bz2"],
+    "PDF文档": [".pdf"],
+    "Office文档": [".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".csv"],
+}
+#输入文件名获得文件后缀
+def classify(filename):
+#分割文件名和后缀
+    ext = os.path.spitext(filename)[1].lower()
+    for caregory,ext_list in TARGETS.items():
+        if ext in ext_list:
+            return category
+    return "其他"
+
+#主函数
+def organized_folder(src_path)
+    #检验文件存在
+    if not os.path.exist():
+        
+    

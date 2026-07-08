@@ -26,5 +26,56 @@ def classify(filename):
 def organized_folder(src_path)
     #检验文件存在
     if not os.path.exist():
-        
+        print(f"文件不存在,检查{asc_path}")
+        return
+
+#遍历文件夹，listdir只读取下一级的内容
+    for filename in os.listdir(src_path):
+#自动拼接完整路径
+        file_full_path = os.path.join(src_path,cat_name)
+#跳过文件夹，只处理文件
+        if os.path.isdir(file_full_path):
+            continue
+
+#获取该文件应当所属的分类
+        cat_name = classify(filename)
+
+#目标分类文件夹路径
+        target_path = os.path.join(src_path,cat_name)
+
+#不存在就自动创建文件夹
+        os.makedirs(target_path,exist_ok = True)
+        target_file_path = os.path.join(target_path,filename)
+
+#避免同名文件覆盖
+        if os.path.existis(target_file_path):
+            print(f"存在,跳过{filename}
+            continue
+#移动文件
+        shutul.move(file_full_path,target_file_path)
+        print("将{filename}移动到{cat_name}")
+print("整理完毕")
+
+#主程序入口
+if __name__ = "__main__:
+    organized_folder(src)
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
     

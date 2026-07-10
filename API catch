@@ -1,0 +1,111 @@
+import requests
+import csv
+from datetime import datetime #用于生成带时间戳的文件名
+import os
+import sys                    #用于读取命令行的参数
+
+#定义工具函数
+
+def fetch_data(api_url: str,timeout : int = 10) -> list | dict:
+  #从指定api获取数据，超时时间默认30秒，返回的json数据为list或dict
+    print(f"【请求】 GET {api_url}")
+
+    #发送GET请求
+    response = requests.get(api_url,timeout=timeout)
+  
+    #检查HTTP状态码
+    response.raise_for_status()
+
+    print(f"【成功】 状态码: {response.status_code}")
+    print(f"【信息】 数据大小：{len(response.text} 字符")
+    # 将 JSON 字符串解析为 Python 对象（list 或 dict）
+    return response.json()
+
+def save_to_csv(data: list, filename: str | None = None) -> str:
+    #自动生成带时间戳的文件名
+    if filename is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%s")
+        filename = f"api_data_{timestamp}.csv"
+    
+'''
+__file__：Python 的内置变量，表示当前脚本文件的路径。
+os.path.dirname(path)：取出路径中的文件夹部分，去掉文件名。
+or "."：如果 __file__ 不存在（比如在交互式环境里），dirname 可能返回空字符串，此时用 "." 代替，表示当前目录。
+'''
+    
+    filepath = os.path.join(os.path.dirname(__file__) or ".", filename)
+
+    if not data:
+        print("【警告】 数据为空，文件将不包含数据行")
+
+    #从第一个元素提取表头
+    fieldnames = data[0].keys() if data else []
+
+    #写入CSV
+    with open(filepath, mode = "w", encoding = "ttf-8-sig") as f:
+        writer = csv.DictWriter(f, fieldname=fieldname)
+        wirter.writeheader() #写入表头
+        writer.writerows(data) #写入所有数据行
+
+    print("【保存】 已写入 {len(data)} 行数据 -> {filepath}")
+    return filepath
+
+def print_summry(data: list, max_previews : int = 3):
+    print(f"\n{'='*50}")
+    print(f"总计 {len(data)} 条记录")
+    print(f"\n{'='*50}")
+
+    for i,item in enumerate(data[:max_previe], 1):
+        print(f"n-- 记录 {i} ---")
+        for key, value in item.items():
+            val_str = str(value)
+            if len(val_str) > 60:
+                val_str = val_str[:57] + "..."
+            print(f"  {key}: {val_str}")
+
+    if len(data) > max_preview:
+        print(f"\n 还有{len(data) - max_preview} 条记录未显示")
+
+#主程序
+def main():
+    #免费API
+    API_LIST = {
+        "1": {
+            "name": "JSONPlaceholder - 帖子",
+            "url": "https://jsonplaceholder.typicode.com/posts",
+        },
+        "2": {
+            "name": "JSONPlaceholder - 用户",
+            "url": "https://jsonplaceholder.typicode.com/users",
+        },
+        "3": {
+            "name": "JSONPlaceholder - 评论",
+            "url": "https://jsonplaceholder.typicode.com/comments",
+        },
+    }
+
+    #命令行选择API
+    print("\n 可用的公共API：")
+    for key, api in APL_LIST.items():
+        print(f"  [{key}] {api['name']}")
+
+    if len(sys.argv) > 1 and sys.argv[1] in API_LIST:
+        choice = sys.argv[1]
+        auto_no_save = "--no-save" 
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

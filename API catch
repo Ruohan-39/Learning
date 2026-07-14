@@ -91,8 +91,63 @@ def main():
 
     if len(sys.argv) > 1 and sys.argv[1] in API_LIST:
         choice = sys.argv[1]
-        auto_no_save = "--no-save" 
-        
+        auto_no_save = "--no-save" in sys.argv
+    #如果启动命令没决定API，提示用户进行选择
+    else:
+        choice = input("\n请选择要抓取的 API （输入编号，默认 1）： ").strip() or "1"
+        auto_no_save = False
+
+    if choice not in API_LIST:
+        print(f"[错误] 无效选择：{choice}")
+        return
+    #通过choice得到的键值索引，获得内层字典
+    api_info = API_LIST[choice]
+    api_url = api_info["url"]
+    api_name = api_info["name"]
+
+    print(f"\n>>>开始提取：{api_name}")
+    print(f"\n>>>API地址：{api_url}")
+
+    #执行抓取
+    try:
+        data = fetch_data(api_url)
+    except requests.exceptions.Timeout:
+        print("【错误】 请求超时，请检查网络连接")
+        return
+    except requests.exceptions.ConnectError:
+        print("【错误】 网络连接失败，请检查网络")
+        return
+    excpet requests.exceptions.HTTPError as e:
+        print(f"【错误】 HTTP 错误： {e}")
+        return
+    except Exception as e:
+        print(f"【错误】：未知错误：{type(e).__name__}:{e}")
+        return
+
+    #检查数据格式，期望API返回一个列表
+    if not isinstance(data,list):
+        print(f"[错误] API返回的不是列表而是 {type(data).__name__}")
+        print(f"[调试] 返回数据: {str(dara)[:200]}")
+        return
+    #打印摘要
+    print_summary(data)
+
+    #保存到CSV
+    if auto_no_save:
+        print("\n 已跳过保存 (--no--save)")
+    else:
+        save_option = input("\n是否要保存到CSV?(y/n)：").strip().lower()
+        if save_option != "n":
+            filepath = save_to_csv(data)
+            print(f"\n 完成！文件保存至: {filepath} ")
+        else:
+            print("\n 已跳过保存")
+
+print(">>>程序结束")
+
+#程序入口
+if __name__ == "__main__"):
+    main()
 
 
 
